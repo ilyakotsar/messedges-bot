@@ -35,7 +35,7 @@ def echo_all(message):
         elif fetch2[0] == 0:
             while True:
                 link = uuid.uuid4()
-                h = hashlib.sha256()
+                h = hashlib.sha512()
                 h.update(str(link).encode())
                 link_hash = h.hexdigest()
                 query3 = f"SELECT telegram_link_hash FROM main_user WHERE telegram_link_hash='{link_hash}'"
