@@ -21,17 +21,18 @@ def echo_all(message):
     con = sqlite3.connect(DATABASE_PATH)
     cur = con.cursor()
     username = message.text.strip()
-    query1 = f"SELECT username FROM main_user WHERE username='{username}'"
+    username_lower = username.lower()
+    query1 = f"SELECT username_lower FROM main_user WHERE username_lower='{username_lower}'"
     res = cur.execute(query1)
     fetch1 = res.fetchone()
     if fetch1 is None:
-        output = 'Error'
+        output = 'User not found'
     else:
-        query2 = f"SELECT telegram_connected FROM main_user WHERE username='{username}'"
+        query2 = f"SELECT telegram_connected FROM main_user WHERE username_lower='{username_lower}'"
         res = cur.execute(query2)
         fetch2 = res.fetchone()
         if fetch2[0] == 1:
-            output = 'Error'
+            output = 'Telegram already connected'
         elif fetch2[0] == 0:
             while True:
                 link = uuid.uuid4()
@@ -46,8 +47,8 @@ def echo_all(message):
                 else:
                     continue
             chat_id = message.chat.id
-            query4 = f"UPDATE main_user SET telegram_chat_id='{chat_id}' WHERE username='{username}'"
-            query5 = f"UPDATE main_user SET telegram_link_hash='{link_hash}' WHERE username='{username}'"
+            query4 = f"UPDATE main_user SET telegram_chat_id='{chat_id}' WHERE username_lower='{username_lower}'"
+            query5 = f"UPDATE main_user SET telegram_link_hash='{link_hash}' WHERE username_lower='{username_lower}'"
             cur.execute(query4)
             cur.execute(query5)
             con.commit()
